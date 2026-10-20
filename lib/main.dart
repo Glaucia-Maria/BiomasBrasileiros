@@ -11,7 +11,7 @@ void main() => runApp(const BiomasApp());
 final List<Map<String, String>> biomas = [
   {
     'nome': 'Amazônia',
-    'imagemUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDve2b71q83NELvkPm30W8eUsosW4xwwZ1yrIWGgbMcVr-igTptFMcSIo&s=10',
+    'imagemUrl': 'lib/assets/amazonia.jpg',
     'corHex': '#2E7D32',
     'destaque': '6.288 km²',
     'status':
@@ -34,7 +34,7 @@ final List<Map<String, String>> biomas = [
   },
   {
     'nome': 'Cerrado',
-    'imagemUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSavZRJR8-2pDEZBRQKFH9diF2qAGAY-U_rYI0_t1ywGuEsxioPMClTsnY&s=10',
+    'imagemUrl': 'lib/assets/cerrado.png',
     'corHex': '#E08A1E',
     'destaque': '7.015 km²',
     'status':
@@ -57,7 +57,7 @@ final List<Map<String, String>> biomas = [
   },
   {
     'nome': 'Mata Atlântica',
-    'imagemUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxkmFXO69CATmN2yd3UJ9fZI7DBHKjeci8X0D00ED6W0iGX8_aFETiziQ&s=10',
+    'imagemUrl': 'lib/assets/mata-atlantica.webp',
     'corHex': '#00796B',
     'destaque': '~12%',
     'status':
@@ -80,7 +80,7 @@ final List<Map<String, String>> biomas = [
   },
   {
     'nome': 'Caatinga',
-    'imagemUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjIbGRzQEwSSgln86AGXfioslkVS3HJOcRdNtgNb9Slkw3lBR0-6YMNYGk&s=10',
+    'imagemUrl': 'lib/assets/caatinga.jpg',
     'corHex': '#C2693B',
     'destaque': '~45%',
     'status':
@@ -103,7 +103,7 @@ final List<Map<String, String>> biomas = [
   },
   {
     'nome': 'Pampa',
-    'imagemUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfQCSfXNhpePzhjeybHEety0A4AhOIWuOeM1V9xP1MJ_mdJ3ryIAh7acY&s=10',
+    'imagemUrl': 'lib/assets/pampa.jpg',
     'corHex': '#8BA63A',
     'destaque': '~54%',
     'status':
@@ -126,8 +126,8 @@ final List<Map<String, String>> biomas = [
   {
     'nome': 'Pantanal',
     'imagemUrl':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_D_AWaszuq5OMxY5VFPSIRyALNoy6ChScEgFZs3f43UJ94rnbZGdZTu4&s=10',
-        'corHex': '#1E88B5',
+        'lib/assets/pantanal.webp',
+    'corHex': '#1E88B5',
     'destaque': '~30%',
     'status':
         'Valor de referência: cerca de 30% do bioma foi atingido pelo fogo em '
@@ -218,28 +218,12 @@ class BiomaImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
+    return Image.asset(
       url,
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
-      // Enquanto baixa: mostra a cor do bioma e um indicador de progresso.
-      loadingBuilder: (context, child, progresso) {
-        if (progresso == null) return child;
-        return Container(
-          color: escurecer(cor, 0.2),
-          alignment: Alignment.center,
-          child: CircularProgressIndicator(
-            color: Colors.white70,
-            strokeWidth: 3,
-            value: progresso.expectedTotalBytes != null
-                ? progresso.cumulativeBytesLoaded /
-                      progresso.expectedTotalBytes!
-                : null,
-          ),
-        );
-      },
-      // Se falhar (sem internet, URL inválida): degradê + aviso.
+      // Se o arquivo não puder ser carregado, mostra o degradê e um aviso.
       errorBuilder: (context, erro, stack) {
         return Container(
           decoration: BoxDecoration(
@@ -253,7 +237,7 @@ class BiomaImage extends StatelessWidget {
           child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.wifi_off_rounded, color: Colors.white70, size: 32),
+              Icon(Icons.broken_image_rounded, color: Colors.white70, size: 32),
               SizedBox(height: 6),
               Text(
                 'Imagem indisponível',
